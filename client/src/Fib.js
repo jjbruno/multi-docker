@@ -24,7 +24,7 @@ class Fib extends Component {
   }
 
   renderSeenIndexes() {
-    this.state.seenIndexes.map(({ number }) => number).join(', ');
+    return this.state.seenIndexes.map(({ number }) => number).join(', ');
   }
 
   renderValues() {
@@ -33,10 +33,11 @@ class Fib extends Component {
     for (let key in this.state.values) {
       entries.push(
         <div key={key}>
-          For index {key} I calculated {this.state.values[key]}
+          For index {key}: {this.state.values[key]}
         </div>
       )
     }
+    return entries
   }
 
   handleSubmit = async (event) => {
@@ -48,6 +49,7 @@ class Fib extends Component {
   }
 
   render() {
+    console.log(this.state)
     return (
       <div>
         <form onSubmit={this.handleSubmit}>

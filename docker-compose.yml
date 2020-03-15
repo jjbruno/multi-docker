@@ -17,6 +17,8 @@ services:
       - '3050:80'
 
   api:
+    depends_on:
+      - postgres
     build:
       dockerfile: Dockerfile.dev
       context: ./server
@@ -44,6 +46,9 @@ services:
     build:
       dockerfile: Dockerfile.dev
       context: ./worker
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     volumes:
       - /app/node_modules
       - ./worker:/app
