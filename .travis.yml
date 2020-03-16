@@ -1,0 +1,25 @@
+language: generic
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t jj57347/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true jj57347/react-test npm test
+
+after_success:
+  - docker build -t jj57347/multi-client ./client
+  - docker build -t jj57347/multi-nginx ./nginx
+  - docker build -t jj57347/multi-server ./server
+  - docker build -t jj57347/multi-worker ./worker
+
+  # Log in to the docker cli -> we added these env vars directly
+  # on the travis-ci.org site for this particular app.
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take those built images and push them to docker hub
+  - docker push jj57347/multi-client
+  - docker push jj57347/multi-nginx
+  - docker push jj57347/multi-server
+  - docker push jj57347/multi-worker
